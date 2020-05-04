@@ -1,25 +1,20 @@
 import React, { Component, ReactNode } from 'react';
 import { Box } from '@material-ui/core';
 import { BookPreview, BookPreviewModel } from '../../components/BookPreview/BookPreview';
-import booksDataService from '../../data/books-data.service';
 import { AppDispatch, AppState } from '../../../../store/root.store';
-import { setBooksAction } from '../../store/books.actions';
-import { BookDto } from '../../data/dto/book.dto';
 import { connect } from 'react-redux';
 import { selectBooks } from '../../store/books.selectors';
+import { searchBooksThunk } from '../../store/books.thunks';
 
 interface BooksProps {
     books: BookPreviewModel[];
-    onBooksFound: (books: BookDto[]) => void;
+    onBooksSearch: (searchTerm: string) => void;
 }
 
 class Books extends Component<BooksProps> {
 
     public componentDidMount(): void {
-        booksDataService.searchBooks('asy')
-            .then(pagedBooks => (
-                this.props.onBooksFound(pagedBooks.items)
-            ));
+        this.props.onBooksSearch('sor');
     }
 
     public render(): ReactNode {
@@ -41,7 +36,7 @@ class Books extends Component<BooksProps> {
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-    onBooksFound: (books: BookDto[]) => dispatch(setBooksAction(books))
+    onBooksSearch: (searchTerm: string) => dispatch(searchBooksThunk(searchTerm)),
 });
 
 const mapStateToProps = (state: AppState) => ({
