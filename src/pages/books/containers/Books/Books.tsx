@@ -4,7 +4,7 @@ import { BookPreview, BookPreviewModel } from '../../components/BookPreview/Book
 import booksDataService from '../../data/books-data.service';
 import { BooksAdapterService } from '../../services/books-adapter.service';
 
-export interface BooksState {
+interface BooksState {
     books: BookPreviewModel[];
 }
 
@@ -15,7 +15,7 @@ class Books extends Component<{}, BooksState> {
     };
 
     public componentDidMount(): void {
-        booksDataService.searchBooks('asy')
+        booksDataService.searchBooks('musk')
             .then(pagedBooks => (
                 this.setState({
                     books: pagedBooks.items.map(book => BooksAdapterService.convertToBookPreviewModel(book))
@@ -27,7 +27,14 @@ class Books extends Component<{}, BooksState> {
         const books = this.state.books;
 
         return (
-            <Box>
+            <Box
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 250px)',
+                    gridGap: 20,
+                    padding: 30
+                }}
+            >
                 {
                     books.map(book => (
                         <BookPreview
