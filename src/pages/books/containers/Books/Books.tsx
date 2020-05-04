@@ -1,30 +1,24 @@
 import React, { Component, ReactNode } from 'react';
 import { Box } from '@material-ui/core';
 import { BookPreview, BookPreviewModel } from '../../components/BookPreview/BookPreview';
-import booksDataService from '../../data/books-data.service';
-import { BooksAdapterService } from '../../services/books-adapter.service';
+import { AppDispatch, AppState } from '../../../../store/root.store';
+import { connect } from 'react-redux';
+import { searchBooksThunk } from '../../store/books.thunk';
+import { selectSearchedBooksPreview } from '../../store/books.selectors';
 
-interface BooksState {
+interface BooksProps {
     books: BookPreviewModel[];
+    onBooksSearch: (searchTerm: string) => void;
 }
 
-class Books extends Component<{}, BooksState> {
-
-    public state: BooksState = {
-        books: []
-    };
+class Books extends Component<BooksProps> {
 
     public componentDidMount(): void {
-        booksDataService.searchBooks('musk')
-            .then(pagedBooks => (
-                this.setState({
-                    books: pagedBooks.items.map(book => BooksAdapterService.convertToBookPreviewModel(book))
-                })
-            ))
+        this.props.onBooksSearch('musk');
     }
 
     public render(): ReactNode {
-        const books = this.state.books;
+        const books = this.props.books;
 
         return (
             <Box
@@ -48,4 +42,12 @@ class Books extends Component<{}, BooksState> {
     }
 }
 
-export default Books;
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+    onBooksSearch: (searchTerm: string) => dispatch(searchBooksThunk(searchTerm))
+})
+
+const mapStateToProps = (state: AppState) => ({
+    books: selectSearchedBooksPreview(state)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Books);
