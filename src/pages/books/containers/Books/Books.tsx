@@ -6,7 +6,7 @@ import { AppDispatch, AppState } from '../../../../store/root.store';
 import { setBooksAction } from '../../store/books.actions';
 import { BookDto } from '../../data/dto/book.dto';
 import { connect } from 'react-redux';
-import { BooksAdapterService } from '../../services/books-adapter.service';
+import { selectBooks } from '../../store/books.selectors';
 
 interface BooksProps {
     books: BookPreviewModel[];
@@ -45,7 +45,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => ({
 });
 
 const mapStateToProps = (state: AppState) => ({
-    books: state.books.books.map(book => BooksAdapterService.convertToBookPreviewModel(book))
+    books: selectBooks(state)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Books);
