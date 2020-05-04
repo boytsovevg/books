@@ -1,5 +1,10 @@
+import { createBrowserHistory } from 'history';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import { rootReducer } from './root.reducer';
+
+import { createRootReducer } from './root.reducer';
+
+export const appHistory = createBrowserHistory();
+export const rootReducer = createRootReducer(appHistory);
 
 export const store = configureStore({
     reducer: rootReducer,
