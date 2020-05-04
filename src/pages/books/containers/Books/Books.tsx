@@ -3,8 +3,8 @@ import { Box } from '@material-ui/core';
 import { BookPreview, BookPreviewModel } from '../../components/BookPreview/BookPreview';
 import { AppDispatch, AppState } from '../../../../store/root.store';
 import { connect } from 'react-redux';
-import { selectBooks } from '../../store/books.selectors';
-import { searchBooksThunk } from '../../store/books.thunks';
+import { searchBooksThunk } from '../../store/books.thunk';
+import { selectSearchedBooksPreview } from '../../store/books.selectors';
 
 interface BooksProps {
     books: BookPreviewModel[];
@@ -14,33 +14,40 @@ interface BooksProps {
 class Books extends Component<BooksProps> {
 
     public componentDidMount(): void {
-        this.props.onBooksSearch('sor');
+        this.props.onBooksSearch('musk');
     }
 
     public render(): ReactNode {
         const books = this.props.books;
 
         return (
-            <Box>
+            <Box
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 250px)',
+                    gridGap: 20,
+                    padding: 30
+                }}
+            >
                 {
                     books.map(book => (
                         <BookPreview
-                            key={ book.id }
-                            book={ book }
+                            key={book.id}
+                            book={book}
                         />
                     ))
                 }
             </Box>
-        );
+        )
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-    onBooksSearch: (searchTerm: string) => dispatch(searchBooksThunk(searchTerm)),
-});
+    onBooksSearch: (searchTerm: string) => dispatch(searchBooksThunk(searchTerm))
+})
 
 const mapStateToProps = (state: AppState) => ({
-    books: selectBooks(state)
-});
+    books: selectSearchedBooksPreview(state)
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Books);
