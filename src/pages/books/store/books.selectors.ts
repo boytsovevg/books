@@ -15,3 +15,26 @@ export const selectSearchedBooksPreview = createSelector(
     selectSearchedBooks,
     (searchedBooks: BookDto[]) => searchedBooks.map(book => BooksAdapterService.convertToBookPreviewModel(book))
 );
+
+export const selectBooks = createSelector(
+    selectBooksSlice,
+    state => state.books
+);
+
+export const selectBook = (bookId: string) => createSelector(
+    selectBooks,
+    (books: BookDto[]) => {
+        return books.find(b => b.id === bookId);
+    }
+)
+
+export const selectBookModel = (bookId: string) => createSelector(
+    selectBook(bookId),
+    (book: BookDto | undefined) => {
+        if (!book) {
+            return;
+        }
+
+        return BooksAdapterService.convertToBookModel(book);
+    }
+)

@@ -4,6 +4,7 @@ import { Create } from '@material-ui/icons';
 
 export interface BookPreviewProps {
     book: BookPreviewModel;
+    onBookEdit: (bookId: string) => void;
 }
 
 export interface BookPreviewModel {
@@ -13,11 +14,15 @@ export interface BookPreviewModel {
     icon: string;
 }
 
-export const BookPreview = ({ book }: BookPreviewProps) => {
+export const BookPreview = ({ book, onBookEdit }: BookPreviewProps) => {
 
     const shortTitle = book.title.length > 30
         ? book.title.slice(0, 30) + '...'
         : book.title;
+
+    const handleEdit = () => {
+        onBookEdit(book.id)
+    };
 
     return (
         <Card>
@@ -34,7 +39,9 @@ export const BookPreview = ({ book }: BookPreviewProps) => {
                 title={shortTitle}
                 subheader={book.author}
                 action={
-                    <IconButton aria-label="settings">
+                    <IconButton
+                        onClick={handleEdit}
+                        aria-label="settings">
                         <Create />
                     </IconButton>
                 }

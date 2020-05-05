@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BookDto } from '../data/dto/book.dto';
-import { setBooksAction } from './books.actions';
+import { setBooksAction, updateBookAction } from './books.actions';
 import { searchBooksThunk } from './books.thunk';
+import { BooksAdapterService } from '../services/books-adapter.service';
 
 export interface BooksState {
     books: BookDto[];
@@ -26,5 +27,15 @@ export const booksReducer = createReducer(initialState, builder => {
                 ...state,
                 searchedBooks: action.payload.items
             }),
+        )
+        .addCase(
+            updateBookAction, (state, action) => ({
+                ...state,
+                books: state.books.map(
+                    book => book.id === action.payload.id
+                    ? BooksAdapterService.updateBookDto(book, action.payload)
+                    : book
+                )
+            })
         )
 })

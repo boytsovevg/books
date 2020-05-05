@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { Box } from '@material-ui/core';
 import { BookPreview, BookPreviewModel } from '../../components/BookPreview/BookPreview';
-import { AppDispatch, AppState } from '../../../../store/root.store';
+import { AppDispatch, appHistory, AppState } from '../../../../store/root.store';
 import { connect } from 'react-redux';
 import { searchBooksThunk } from '../../store/books.thunk';
 import { selectSearchedBooksPreview } from '../../store/books.selectors';
@@ -15,6 +15,10 @@ class Books extends Component<BooksProps> {
 
     public componentDidMount(): void {
         this.props.onBooksSearch('musk');
+    }
+
+    public goToBook = (id: string) => {
+        appHistory.push(`/books/${id}/edit`);
     }
 
     public render(): ReactNode {
@@ -34,6 +38,7 @@ class Books extends Component<BooksProps> {
                         <BookPreview
                             key={book.id}
                             book={book}
+                            onBookEdit={this.goToBook}
                         />
                     ))
                 }
