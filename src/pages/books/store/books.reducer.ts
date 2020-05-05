@@ -1,17 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BookDto } from '../data/dto/book.dto';
-import { setBooksAction, updateBookAction } from './books.actions';
-import { searchBooksThunk } from './books.thunk';
+import { setBooksAction, setSelectedBookAction, updateBookAction } from './books.actions';
+import { loadBookThunk, searchBooksThunk } from './books.thunks';
 import { BooksAdapterService } from '../services/books-adapter.service';
 
 export interface BooksState {
     books: BookDto[];
     searchedBooks: BookDto[];
+    selectedBook: BookDto | undefined;
 }
 
 const initialState: BooksState = {
     books: [],
-    searchedBooks: []
+    searchedBooks: [],
+    selectedBook: undefined
 }
 
 export const booksReducer = createReducer(initialState, builder => {
@@ -36,6 +38,21 @@ export const booksReducer = createReducer(initialState, builder => {
                     ? BooksAdapterService.updateBookDto(book, action.payload)
                     : book
                 )
+            })
+        )
+        .addCase(
+            loadBookThunk.fulfilled, (state, action) => ({
+                ...state,
+                books: [
+                    action.payload,
+                    ...state.books,
+                ]
+            })
+        )
+        .addCase(
+            setSelectedBookAction, (state, action) => ({
+                ...state,
+                selectedBook: state.searchedBooks.find(sb => sb.id === action.payload)
             })
         )
 })

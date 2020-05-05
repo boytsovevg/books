@@ -13,30 +13,7 @@ export interface BookEditProps {
     onBookSave: (book: BookModel) => void;
 }
 
-export interface BookEditState {
-    bookData: BookModel;
-}
-
-class BookEdit extends Component<BookEditProps, BookEditState> {
-
-    public state: BookEditState = {
-        bookData: {
-            title: '',
-            author: '',
-            categories: [],
-            iconUrl: ''
-        }
-    }
-
-    public componentDidMount(): void {
-        const { book } = this.props;
-
-        if (book) {
-            this.setState({
-                bookData: book
-            });
-        }
-    }
+class BookEdit extends Component<BookEditProps> {
 
     public handleSaveBook = (book: BookModel) => {
         this.props.onBookSave(book);
@@ -44,12 +21,13 @@ class BookEdit extends Component<BookEditProps, BookEditState> {
 
     public render(): ReactNode {
 
+        const { book } = this.props;
+
         return (
-            <>
+            book &&
                 <BookEditForm
-                    book={this.state.bookData}
+                    book={book}
                 />
-            </>
         )
     }
 }

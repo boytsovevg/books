@@ -21,15 +21,20 @@ export const selectBooks = createSelector(
     state => state.books
 );
 
-export const selectBook = (bookId: string) => createSelector(
+export const selectBookPreviews = createSelector(
     selectBooks,
+    books => books.map(book => BooksAdapterService.convertToBookPreviewModel(book))
+)
+
+export const selectSearchedBook = (bookId: string) => createSelector(
+    selectSearchedBooks,
     (books: BookDto[]) => {
         return books.find(b => b.id === bookId);
     }
 )
 
 export const selectBookModel = (bookId: string) => createSelector(
-    selectBook(bookId),
+    selectSearchedBook(bookId),
     (book: BookDto | undefined) => {
         if (!book) {
             return;
@@ -38,3 +43,8 @@ export const selectBookModel = (bookId: string) => createSelector(
         return BooksAdapterService.convertToBookModel(book);
     }
 )
+
+export const selectSelectedBook = createSelector(
+    selectBooksSlice,
+    state => state.selectedBook && BooksAdapterService.convertToBookModel(state.selectedBook)
+);

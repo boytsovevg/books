@@ -9,3 +9,7 @@ export const setBooksAction = createAction<BookDto[]>(
 export const updateBookAction = createAction<BookModel>(
     '[books] updateBookAction'
 );
+
+export const setSelectedBookAction = createAction<string>(
+    '[books] setSelectedBookAction'
+);
